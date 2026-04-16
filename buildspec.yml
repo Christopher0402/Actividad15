@@ -6,15 +6,15 @@ phases:
       python: 3.11
   build:
     commands:
-      - echo "Construyendo imagen..."
+      - echo "1. Construyendo imagen de Docker..."
       - docker build -t mi-app .
-      - echo "Generando log..."
+      - echo "2. Ejecutando contenedor para generar backup.log..."
       - docker run --name contenedor-prueba mi-app
   post_build:
     commands:
-      - echo "Extrayendo log..."
+      - echo "3. Extrayendo backup.log del contenedor..."
       - docker cp contenedor-prueba:/app/backup.log .
-      - echo "Subiendo a S3..."
-      # Quitamos el ACL temporalmente para verificar que el permiso de IAM funcione
-      - aws s3 cp backup.log s3://actividad15bucket/backup.log
-      - echo "¡Listo!"
+      - echo "4. Subiendo archivo a S3..."
+      # IMPORTANTE: Asegúrate de que el nombre del bucket sea el correcto
+      - aws s3 cp backup.log s3://actividad15bucket/backup.log --acl public-read
+      - echo "¡Proceso completado!"
