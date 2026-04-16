@@ -6,17 +6,15 @@ phases:
       python: 3.11
   build:
     commands:
-      - echo "Construyendo la imagen de Docker..."
+      - echo "Construyendo imagen..."
       - docker build -t mi-app .
-      - echo "Ejecutando el contenedor para generar el log..."
-      # Corremos el contenedor y le ponemos un nombre para poder sacarle el archivo después
+      - echo "Generando log..."
       - docker run --name contenedor-prueba mi-app
   post_build:
     commands:
-      - echo "Extrayendo el archivo backup.log desde el contenedor..."
-      # Este comando saca el log del contenedor de Docker hacia el servidor de CodeBuild
+      - echo "Extrayendo log..."
       - docker cp contenedor-prueba:/app/backup.log .
-      - echo "Subiendo el archivo a S3 con permisos públicos..."
-      # Corregimos la ruta agregando /backup.log al final
-      - aws s3 cp backup.log s3://actividad15bucket/backup.log --acl public-read
-      - echo "¡Proceso terminado con éxito!"
+      - echo "Subiendo a S3..."
+      # Quitamos el ACL temporalmente para verificar que el permiso de IAM funcione
+      - aws s3 cp backup.log s3://actividad15bucket/backup.log
+      - echo "¡Listo!"
