@@ -3,17 +3,23 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Iniciando Docker...
+      - echo "Iniciando fase de pre-compilación..."
   build:
     commands:
-      - echo Construyendo la imagen de Docker...
+      - echo "Construyendo la imagen de Docker..."
       - docker build -t mi-app .
-      - echo Ejecutando el contenedor para generar el log...
+      - echo "Ejecutando el contenedor para procesar datos..."
       - docker run --name contenedor-prueba mi-app
   post_build:
     commands:
-      - echo Extrayendo el archivo backup.log del contenedor...
+      - echo "Fase de post-compilación: Extrayendo log..."
+      # Extraemos el archivo generado dentro del contenedor a la raíz de CodeBuild
       - docker cp contenedor-prueba:/app/backup.log .
-      - echo Subiendo el archivo a S3...
-      - aws s3 cp backup.log s3://actividad15bucket/ --acl bucket-owner-full-control
-      - echo Proceso terminado con éxito.
+      - echo "Subiendo backup.log a S3..."
+      # Usamos --acl public-read para asegurar que el acceso no sea denegado
+      - aws s3 cp backup.log s3://actividad15bucket/backup.log --acl public-read
+      - echo "¡Proceso completado con éxito!"
+
+artifacts:
+  files:
+    - backup.log
