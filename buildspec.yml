@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Iniciando Docker...
+  build:
+    commands:
+      - docker build -t mi-app .
+      - docker run --name contenedor-prueba mi-app
+  post_build:
+    commands:
+      - docker cp contenedor-prueba:/app/backup.log .
+      - aws s3 cp backup.log s3://actividad15bucket/

@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "Christopher": "lavar los trastes",
+        "active": true
+    },
+    {
+        "id": 2,
+        "Christopher": "hacer la cama",
+        "active": false
+    },
+    {
+        "id": 3,
+        "Christopher": "regar las plantas",
+        "active": true
+    }
+]
